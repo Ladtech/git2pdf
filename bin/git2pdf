@@ -8,6 +8,7 @@ class Git2PdfBash < Thor
   option :repos, :default => "", aliases: :r
   option :user, aliases: :u
   option :password, aliases: :p, :default=>nil
+  option :title, aliases: :t, :default=>nil
   option :organisation, aliases: :o
 
   def gen(repositories="")
@@ -25,7 +26,7 @@ class Git2PdfBash < Thor
       pass = pass.strip.gsub(/\n/,'')
     end
 
-    g = Git2Pdf.new repos: repos, basic_auth: [options[:user],pass], org: options[:organisation], user: options[:user]
+    g = Git2Pdf.new title: options[:title], repos: repos, basic_auth: [options[:user],pass], org: options[:organisation], user: options[:user]
     done = g.execute
     puts "\n#{done} cards output to issues.pdf"
   end

@@ -10,6 +10,7 @@ class Git2Pdf
     @repos = options[:repos] || []
     @basic_auth = options[:basic_auth] || nil
     @org = options[:org] || nil
+    @title = options[:title]
   end
 
   def execute
@@ -43,7 +44,7 @@ class Git2Pdf
         milestone = val["milestone"] ? val["milestone"]["title"] : ""
 
         #labels.include?(['BUG','FEATURE','ENHANCEMENT','QUESTION'])
-        hash = {short_title: repo, ref: "#{val["number"]}", long_title: "#{val["title"]}", type: type, due: "", labels: labels, milestone: "#{milestone}"}
+        hash = {short_title: @title || repo, ref: "#{val["number"]}", long_title: "#{val["title"]}", type: type, due: "", labels: labels, milestone: "#{milestone}"}
         batch << hash
       end
     end
@@ -67,7 +68,7 @@ class Git2Pdf
       font 'Lato'
       batch = batch.sort { |a, b| a["ref"]<=>b["ref"] and a["project"]<=>b["project"] }
       #logo = open("http://www.pocketworks.co.uk/images/logo.png")
-      logo = open("#{dir}/assets/images/pocketworks.png")
+      logo = open("#{dir}/assets/images/Ladtech.png")
       fill_color(0,0,0,100)
       batch.each do |issue|
 
@@ -141,12 +142,12 @@ class Git2Pdf
           y_offset = y_offset - 50
           # Long title
           font 'Lato', :style => :light, size: 18
-          text_box issue[:long_title] ? issue[:long_title][0..120] : "NO DESCRIPTION", :at => [margin, y_offset], :width => 280-margin, :overflow => :shrink_to_fit
+          text_box issue[:long_title] ? issue[:long_title][0..120] : '', :at => [margin, y_offset], :width => 280-margin, :overflow => :shrink_to_fit
         end
 
         # Labels
         font 'Lato', :style => :bold, size: 12
-        text_box issue[:labels].length == 0 ? "NO LABELS!" : issue[:labels], :at => [margin, 20], :width => 220-margin, :overflow => :shrink_to_fit
+        text_box issue[:labels].length == 0 ? '' : issue[:labels], :at => [margin, 20], :width => 220-margin, :overflow => :shrink_to_fit
         #text_box fields[:due] || "", :at=>[120,20], :width=>60, :overflow=>:shrink_to_fit
         #end
 

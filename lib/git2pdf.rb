@@ -32,7 +32,7 @@ class Git2Pdf
 
       hash = JSON.parse(json)
 
-      hash.find_all { |issue| !issue["labels"].collect { |l| l["name"] }.include? 'printed' }.each do |val|
+      hash.find_all { |issue| issue["labels"].collect { |l| l["name"] }.include?('print me') }.each do |val|
         labels = val["labels"].collect { |l| l["name"].upcase }.join(', ')
         type = ""
         type = "BUG" if labels =~ /bug/i #not billable
@@ -115,13 +115,17 @@ class Git2Pdf
           #text_box fields["due"] || "", :at=>[120,20], :width=>60, :overflow=>:shrink_to_fit
           y_offset = y_offset + 20
         end
-        
+
+        milestone = issue[:milestone]
+
         fill_color "EEEEEE"
-        fill_color "D0021B" if issue[:type] == "BUG"            
-        fill_color "1D8FCE" if issue[:type] == "TASK"            
-        fill_color "FBF937" if issue[:type] == "FEATURE"
-        fill_color "F5B383" if issue[:type] == "AMEND"
-        fill_color "FBF937" if issue[:type] == "ENHANCEMENT"
+        fill_color "FF0000" if milestone == "Re-Architect"
+        fill_color "0000FF" if milestone == "Movies journey - with BB"
+        fill_color "00FFFF" if milestone == "Movies journey - no BB"
+        fill_color "FF00FF" if milestone == "Provisioning"
+        fill_color "D0021B" if issue[:type] == "BUG"
+
+
 
         if issue[:type] and issue[:type] != ""
           fill{rectangle([0,220], margin-10, 220)}          
